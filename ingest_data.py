@@ -14,7 +14,10 @@ def main(params):
     db = params.db
     table_name = params.table_name
     url = params.url
-    csv_name = 'data.csv.gz'
+    if table_name == "yellow_taxi_trips":
+        csv_name = 'data.csv.gz'
+    else:
+        csv_name = 'data.csv'
 
     os.system(f"wget {url} -O {csv_name}")
 
@@ -28,9 +31,9 @@ def main(params):
     df_iter = pd.read_csv(csv_name, iterator=True, chunksize=100000)
 
     df = next(df_iter)
-
-    df.tpep_pickup_datetime = pd.to_datetime(df.tpep_pickup_datetime)
-    df.tpep_dropoff_datetime = pd.to_datetime(df.tpep_dropoff_datetime)
+    if table_name == "yellow_taxi_trips":
+        df.tpep_pickup_datetime = pd.to_datetime(df.tpep_pickup_datetime)
+        df.tpep_dropoff_datetime = pd.to_datetime(df.tpep_dropoff_datetime)
 
     df.head(n=0).to_sql(name=table_name, con=engine, if_exists='replace')
 
