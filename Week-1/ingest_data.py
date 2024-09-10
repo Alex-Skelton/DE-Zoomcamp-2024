@@ -14,7 +14,7 @@ def main(params):
     db = params.db
     table_name = params.table_name
     url = params.url
-    if table_name == "yellow_taxi_trips":
+    if "taxi_trips" in table_name:
         csv_name = 'data.csv.gz'
     else:
         csv_name = 'data.csv'
@@ -24,16 +24,16 @@ def main(params):
     engine = create_engine(f'postgresql://{user}:{password}@{host}:{port}/{db}')
 
     df = pd.read_csv(csv_name, nrows=100)
-    if table_name == "yellow_taxi_trips":
-        df.tpep_pickup_datetime = pd.to_datetime(df.tpep_pickup_datetime)
-        df.tpep_dropoff_datetime = pd.to_datetime(df.tpep_dropoff_datetime)
+    if "taxi_trips" in table_name:
+        df.lpep_pickup_datetime = pd.to_datetime(df.lpep_pickup_datetime)
+        df.lpep_dropoff_datetime = pd.to_datetime(df.lpep_dropoff_datetime)
 
     df_iter = pd.read_csv(csv_name, iterator=True, chunksize=100000)
 
     df = next(df_iter)
-    if table_name == "yellow_taxi_trips":
-        df.tpep_pickup_datetime = pd.to_datetime(df.tpep_pickup_datetime)
-        df.tpep_dropoff_datetime = pd.to_datetime(df.tpep_dropoff_datetime)
+    if "taxi_trips" in table_name:
+        df.lpep_pickup_datetime = pd.to_datetime(df.lpep_pickup_datetime)
+        df.lpep_dropoff_datetime = pd.to_datetime(df.lpep_dropoff_datetime)
 
     df.head(n=0).to_sql(name=table_name, con=engine, if_exists='replace')
 
@@ -42,9 +42,9 @@ def main(params):
     while True:
         t_start = time()
         df = next(df_iter)
-        if table_name == "yellow_taxi_trips":
-            df.tpep_pickup_datetime = pd.to_datetime(df.tpep_pickup_datetime)
-            df.tpep_dropoff_datetime = pd.to_datetime(df.tpep_dropoff_datetime)
+        if "taxi_trips" in table_name:
+            df.lpep_pickup_datetime = pd.to_datetime(df.lpep_pickup_datetime)
+            df.lpep_dropoff_datetime = pd.to_datetime(df.lpep_dropoff_datetime)
         df.to_sql(name=table_name, con=engine, if_exists='append')
         t_end = time()
         print(f"Chunk successfully inserted. It took {t_end - t_start} seconds")
