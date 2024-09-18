@@ -30,3 +30,12 @@ data['lpep_pickup_date'] = data['lpep_pickup_datetime'].dt.date
 print(data["VendorID"].unique())
 ```
 
+## Question 5
+
+4
+
+## Question 6
+
+96
+
+# Overall score: 100%
