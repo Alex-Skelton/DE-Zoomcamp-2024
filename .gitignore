@@ -185,3 +185,5 @@ fabric.properties
 # .idea
 
 yellow_tripdata_2019-01.csv.gz
+
+*.json
